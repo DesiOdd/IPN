@@ -24,15 +24,22 @@ ipncore-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+/data/
 
-.elixir_ls/
-
+/.elixir_ls/
+/.vscode/
 mix.lock
+
+env_file
 
 *.app
 *.keys
+*.key
 *.pem
 *.zip
 *.rar
 *.7z
 *.gz
+*.db
+*.cub
+*.log

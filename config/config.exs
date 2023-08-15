@@ -13,15 +13,28 @@ else
   config :logger, level: :debug
 end
 
-# Ipnutils lib
-config :ipnutils, :jsonlib, Jason
-config :ipnutils, :repo, Ipncore.Repo
+# Blockchain setup
+config :ipncore, :token, System.get_env("NATIVE_TOKEN", "IPN")
+config :ipncore, :message_max_size, 8192
+config :ipncore, :version, 0
+config :ipncore, :max_block_size, 10_485_760
+config :ipncore, :block_data_max_size, 10_000_000
+config :ipncore, :block_interval, :timer.seconds(5)
+config :ipncore, :block_file_ext, "mpk"
+config :ipncore, :note_max_size, 255
+config :ipncore, :max_tx_amount, 1_000_000_000_000_000
+config :ipncore, :timeout_refund, :timer.hours(72)
+config :ipncore, :message_timeout, :timer.seconds(5)
+config :ipncore, :max_validators, 1000
+config :ipncore, :max_tokens, 10_000
 
-# blcokchain config
-config :ipncore, :migration_version, 0
-config :ipncore, :block_version, 0
-config :ipncore, :block_interval, :timer.seconds(60)
-config :ipncore, :tx_version, 0
-config :ipncore, :tx_timeout, :timer.seconds(30)
-config :ipncore, :tx_timeout_refund, :timer.hours(72)
-config :ipncore, :tx_edit_delay, :timer.hours(1)
+# P2P client
+config :ipncore, :p2p_client, [
+  :binary,
+  reuseaddr: true,
+  packet: 2,
+  packet_size: 9_000
+]
+
+config :ipncore, json: Jason
+config :blake3, rayon: true

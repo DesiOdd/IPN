@@ -1,28 +1,44 @@
-# defmodule UDPServer.Store do
-#   @table :udp_tls
-#   @hash :ripemd160
+defmodule Ippan.Store.KV do
+  @callback child_spec(term) :: term()
+  @callback start_link(term) :: {:ok, pid()}
+  @callback create() :: :ok | {:error, term()}
+  @callback drop() :: :ok | {:error, term()}
+  @callback base() :: atom()
+  @callback insert(x :: term()) :: :ok | {:error, term()}
+  @callback insert_new(x :: term()) :: boolean()
+  @callback exists?(term()) :: boolean()
+  @callback not_exists?(term()) :: boolean()
+  @callback keys() :: list()
+  @callback get(key :: term) :: nil | term()
+  @callback owner?(key :: term(), owner :: binary()) :: boolean()
+  @callback get_if_owner(key :: term(), owner :: binary()) :: nil | term()
+  @callback delete(key :: term()) :: :ok | {:error, term()}
+  @callback delete_all() :: :ok
+  @callback info() :: map()
+  @callback size() :: non_neg_integer()
+  @callback file_size() :: non_neg_integer()
+end
 
-#   def init(_opts) do
-#     :ets.new(@table, [:set, :protected])
-#   end
-
-#   def put(conn) do
-#     hash = compute_hash(conn)
-
-#     :ets.insert(@table, {hash, conn})
-#   end
-
-#   def get(hash) do
-#     :ets.select(@table, [{{:"$1", :_}, [{:==, :"$1", hash}], [:"$_"]}])
-#     |> List.first()
-#   end
-
-#   def delete(hash) do
-#     :ets.select_delete(@table, [{{:"$1", :_}, [{:==, :"$1", hash}], [:"$_"]}])
-#   end
-
-#   defp compute_hash(%{remote_ip: remote_ip}) do
-#     data = :inet.ntoa(remote_ip) |> to_string
-#     :crypto.hash(@hash, data)
-#   end
-# end
+defmodule Ippan.Store.Relational do
+  @callback child_spec(term()) :: term()
+  @callback start_link(term()) :: {:ok, pid()}
+  @callback create() :: :ok | {:error, term()}
+  @callback drop() :: :ok | {:error, term()}
+  @callback base() :: atom()
+  @callback insert(x :: term()) :: :ok | {:error, term()}
+  @callback insert_new(x :: term()) :: boolean()
+  @callback insert_all(list()) :: :ok | {:error, term()}
+  @callback exists?(term()) :: boolean()
+  @callback not_exists?(term()) :: boolean()
+  @callback keys() :: list()
+  @callback get(key :: term) :: nil | term()
+  @callback all() :: list()
+  @callback owner?(key :: term(), owner :: binary()) :: boolean()
+  @callback get_if_owner(key :: term(), owner :: binary()) :: nil | term()
+  @callback update(where :: keyword(), props :: map() | keyword()) :: :ok | {:error, term()}
+  @callback delete(key :: term()) :: :ok | {:error, term()}
+  # @callback delete_owner(key :: term(), owner :: binary) :: :ok | {:error, term()}
+  @callback delete_all() :: non_neg_integer()
+  @callback count() :: non_neg_integer()
+  @callback sync() :: :ok | :error
+end
